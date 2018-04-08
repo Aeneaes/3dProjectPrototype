@@ -11,12 +11,18 @@ namespace _3dProjectPrototype
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+        private Player player;
+        private Enemy enemy1;
+        private Texture2D _playerTexture;
 
+        //maybe outsource later
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
         }
+
+
 
         /// <summary>
         /// Allows the game to perform any initialization it needs to before starting to run.
@@ -39,6 +45,9 @@ namespace _3dProjectPrototype
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
+            _playerTexture = Content.Load<Texture2D>("Images/Player");
+            player = new Player(_playerTexture, new Vector2(250, 250), spriteBatch);
+            enemy1 = new Enemy(_playerTexture, new Vector2(0, 250), spriteBatch);
 
             // TODO: use this.Content to load your game content here
         }
@@ -62,6 +71,10 @@ namespace _3dProjectPrototype
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
+            player.Update(gameTime);
+            enemy1.Update(gameTime, player.getPosition());
+            
+
             // TODO: Add your update logic here
 
             base.Update(gameTime);
@@ -73,7 +86,10 @@ namespace _3dProjectPrototype
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            GraphicsDevice.Clear(Color.White);
+
+            player.Draw(gameTime);
+            enemy1.Draw(gameTime);
 
             // TODO: Add your drawing code here
 
