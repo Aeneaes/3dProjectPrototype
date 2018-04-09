@@ -6,42 +6,45 @@ namespace _3dProjectPrototype
 {
     class Enemy
     {
-            private Texture2D _texture;
-            private Vector2 _position;
-            SpriteBatch _spriteBatch;
+        private Texture2D _texture;
+        private Vector2 _position;
+        private Vector2 _direction;
+        private bool alive;
+        SpriteBatch _spriteBatch;
 
-            public Enemy(Texture2D enemyTexture, Vector2 enemyPosition, SpriteBatch spriteBatch)
+        public Enemy(Texture2D enemyTexture, Vector2 enemyPosition, SpriteBatch spriteBatch)
+        {
+            _texture = enemyTexture;
+            _position = enemyPosition;
+            _spriteBatch = spriteBatch;
+            alive = true;
+        }
+
+        public void Update(GameTime Gametime, Vector2 playerPosition)
+        {   
+            if (alive)
             {
-                _texture = enemyTexture;
-                _position = enemyPosition;
-                _spriteBatch = spriteBatch;
+                _direction = Vector2.Subtract(playerPosition, _position);
+                _direction = Vector2.Normalize(_direction); //devide or multiply this value to edit speed
+
+                _position = Vector2.Add(_position, _direction); 
+                //more precise tracking of the player
+
             }
 
-            public void Update(GameTime Gametime, Vector2 playerPosition)
-            {
-                if (playerPosition.Y < _position.Y)
-                { _position = Vector2.Add(_position, new Vector2(0, -3)); }
+            else { _position = new Vector2(-20, -20); }
+        }
 
-                if (playerPosition.Y > _position.Y)
-                { _position = Vector2.Add(_position, new Vector2(0, 3)); }
+        public void Draw(GameTime gameTime)
+        {
 
-                if (playerPosition.X < _position.X)
-                { _position = Vector2.Add(_position, new Vector2(-3, 0)); }
+            _spriteBatch.Begin();
 
-                if (playerPosition.X > _position.X)
-                { _position = Vector2.Add(_position, new Vector2(3, 0)); }
-            }
+            _spriteBatch.Draw(_texture, _position, Color.Red);
 
-            public void Draw(GameTime gameTime)
-            {
-
-                _spriteBatch.Begin();
-
-                _spriteBatch.Draw(_texture, _position, Color.White);
-
-                _spriteBatch.End();
-                // TODO: Add your drawing code here
-            }
+            _spriteBatch.End();
+            // TODO: Add your drawing code here
         }
     }
+}
 

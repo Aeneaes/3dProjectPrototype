@@ -12,9 +12,10 @@ namespace _3dProjectPrototype
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         private Player player;
-        private Enemy enemy1;
         private Texture2D _playerTexture;
-
+        private bool won = true; //enables us to check if the skins are unlocked because the player won at least once
+        public int enemyCount;
+        private Enemy[] enemys = new Enemy[9];
         //maybe outsource later
         public Game1()
         {
@@ -46,8 +47,19 @@ namespace _3dProjectPrototype
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
             _playerTexture = Content.Load<Texture2D>("Images/Player");
-            player = new Player(_playerTexture, new Vector2(250, 250), spriteBatch);
-            enemy1 = new Enemy(_playerTexture, new Vector2(0, 250), spriteBatch);
+            player = new Player(_playerTexture, new Vector2(400, 400), spriteBatch);
+
+
+            enemys[0] = new Enemy(_playerTexture, new Vector2(400, 0), spriteBatch);
+            enemys[1] = new Enemy(_playerTexture, new Vector2(300, -50), spriteBatch);
+            enemys[2] = new Enemy(_playerTexture, new Vector2(500, -50), spriteBatch);
+            enemys[3] = new Enemy(_playerTexture, new Vector2(200, -100), spriteBatch);
+            enemys[4] = new Enemy(_playerTexture, new Vector2(600, -100), spriteBatch);
+            enemys[5] = new Enemy(_playerTexture, new Vector2(100, -150), spriteBatch);
+            enemys[6] = new Enemy(_playerTexture, new Vector2(700, -150), spriteBatch);
+            enemys[7] = new Enemy(_playerTexture, new Vector2(0, -200), spriteBatch);
+            enemys[8] = new Enemy(_playerTexture, new Vector2(800, -200), spriteBatch);
+            //tried instancing enemys in a loop, but then only one enemy would get nstanced, TODO find efficent way
 
             // TODO: use this.Content to load your game content here
         }
@@ -72,8 +84,32 @@ namespace _3dProjectPrototype
                 Exit();
 
             player.Update(gameTime);
-            enemy1.Update(gameTime, player.getPosition());
-            
+            for (int i = 0; i < enemys.Length; i++) //update all enemys together
+            {
+                enemys[i].Update(gameTime, player.getPosition());
+            }
+
+            if (won) //skinselect
+            {
+                if (Keyboard.GetState().IsKeyDown(Keys.Up))
+                {
+                    player.setSkin(Color.White);
+                }
+                if (Keyboard.GetState().IsKeyDown(Keys.Left))
+                {
+                    player.setSkin(Color.Green);
+                }
+                if (Keyboard.GetState().IsKeyDown(Keys.Right))
+                {
+                    player.setSkin(Color.Blue);
+                }
+                if (Keyboard.GetState().IsKeyDown(Keys.Down))
+                {
+                    player.setSkin(Color.Yellow);
+                }
+            }
+
+
 
             // TODO: Add your update logic here
 
@@ -89,7 +125,11 @@ namespace _3dProjectPrototype
             GraphicsDevice.Clear(Color.White);
 
             player.Draw(gameTime);
-            enemy1.Draw(gameTime);
+
+            for (int i = 0; i < enemys.Length; i++) //Draw all enemys together
+            {
+                enemys[i].Draw(gameTime);
+            }
 
             // TODO: Add your drawing code here
 

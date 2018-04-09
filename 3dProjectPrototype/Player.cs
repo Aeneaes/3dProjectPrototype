@@ -8,6 +8,9 @@ namespace _3dProjectPrototype
     {
         private Texture2D _texture;
         private Vector2 _position;
+        private Circle _hitbox;
+        private Color _skin = Color.White;
+
         SpriteBatch _spriteBatch;
 
         public Player(Texture2D playerTexture, Vector2 playerPosition, SpriteBatch spriteBatch)
@@ -19,6 +22,10 @@ namespace _3dProjectPrototype
         public Vector2 getPosition()
         {
             return _position;
+        }
+        public void setSkin(Color skin)
+        {
+            _skin = skin;
         }
         public void Update(GameTime Gametime)
         {
@@ -40,7 +47,7 @@ namespace _3dProjectPrototype
 
             _spriteBatch.Begin();
 
-            _spriteBatch.Draw(_texture, _position, Color.White);
+            _spriteBatch.Draw(_texture, _position, _skin);
 
             _spriteBatch.End();
              // TODO: Add your drawing code here
