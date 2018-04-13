@@ -1,49 +1,73 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System.Collections.Generic;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
 namespace _3dProjectPrototype
 {
-    class Enemy
+    class Enemy : Sprite
     {
-        private Texture2D _texture;
-        private Vector2 _position;
-        private Vector2 _direction;
-        private bool alive;
-        SpriteBatch _spriteBatch;
+        private Vector2 _playerPos;
+        private Circle _playerHit;
 
-        public Enemy(Texture2D enemyTexture, Vector2 enemyPosition, SpriteBatch spriteBatch)
+        public Enemy(Texture2D texture)
+            : base(texture)
         {
-            _texture = enemyTexture;
-            _position = enemyPosition;
-            _spriteBatch = spriteBatch;
-            alive = true;
+            this.Hitbox = new Circle(Position, 10f);
         }
 
-        public void Update(GameTime Gametime, Vector2 playerPosition)
-        {   
-            if (alive)
+        public override void Update(GameTime gameTime, List<Sprite> sprite)
+        {
+            GetPlayerHitbox(sprite);
+            GetPlayerPos(sprite);
+            Hitbox.setPosition(Position);
+            //MoveTowardsPlayer(_playerPos); deactivated for testing
+            //kill player
+            if (Hitbox.intersectsWith(_playerHit))
             {
-                _direction = Vector2.Subtract(playerPosition, _position);
-                _direction = Vector2.Normalize(_direction); //devide or multiply this value to edit speed
-
-                _position = Vector2.Add(_position, _direction); 
-                //more precise tracking of the player
-
+                foreach (var player in sprite)
+                {
+                    if (player.IsPlayer)
+                        player.IsRemoved = true;
+                }
             }
 
-            else { _position = new Vector2(-20, -20); }
         }
 
-        public void Draw(GameTime gameTime)
+        //Speed für verschiedene Gegner
+        private void MoveTowardsPlayer(Vector2 playerPos)
         {
+            if (playerPos.Y < this.Position.Y)
+            { Position = Vector2.Add(Position, new Vector2(0, -3 * this.Speed)); }
 
-            _spriteBatch.Begin();
+            if (playerPos.Y > this.Position.Y)
+            { Position = Vector2.Add(Position, new Vector2(0, 3*this.Speed)); }
 
-            _spriteBatch.Draw(_texture, _position, Color.Red);
+            if (playerPos.X < Position.X)
+            { Position = Vector2.Add(this.Position, new Vector2(-3 * this.Speed, 0)); }
 
-            _spriteBatch.End();
-            // TODO: Add your drawing code here
+            if (playerPos.X > this.Position.X)
+            { Position = Vector2.Add(Position, new Vector2(3 * this.Speed, 0)); }
+
+
+            
+        }
+
+        private void GetPlayerPos(List<Sprite> sprite)
+        {
+            foreach(var player in sprite)
+            {
+                if(player.IsPlayer)
+                _playerPos = player.Position;
+            }
+        }
+        private void GetPlayerHitbox(List<Sprite> sprite)
+        {
+            foreach (var player in sprite)
+            {
+                if (player.IsPlayer)
+                    _playerHit = player.Hitbox;
+            }
         }
     }
 }

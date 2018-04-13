@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework.Input;
 
 namespace _3dProjectPrototype
 {
-    class Circle
+    public class Circle
     {
         public Vector2 middle;
         public float radius;
