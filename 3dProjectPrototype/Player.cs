@@ -1,56 +1,65 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System;
+using System.Collections.Generic;
 
 namespace _3dProjectPrototype
 {
-    class Player
+    class Player : Sprite
     {
-        private Texture2D _texture;
-        private Vector2 _position;
-        private Circle _hitbox;
-        private Color _skin = Color.White;
+        public Projectile Projectile;
 
-        SpriteBatch _spriteBatch;
-
-        public Player(Texture2D playerTexture, Vector2 playerPosition, SpriteBatch spriteBatch)
+        public Player(Texture2D texture)
+            :base(texture)
         {
-            _texture = playerTexture;
-            _position = playerPosition;
-            _spriteBatch = spriteBatch;
+            
         }
+
         public Vector2 getPosition()
         {
-            return _position;
+            return Position;
         }
-        public void setSkin(Color skin)
+
+        public override void Update(GameTime Gametime, List<Sprite> sprites)
         {
-            _skin = skin;
-        }
-        public void Update(GameTime Gametime)
-        {
+            //Key-release erkennen (Schussmechanik)
+            _previousKey = _currentKey;
+            _currentKey = Keyboard.GetState();
+        
             if (Keyboard.GetState().IsKeyDown(Keys.W))
-            { _position = Vector2.Add(_position, new Vector2(0, -5)); }
+            { Position += Direction * Speed; }
 
             if (Keyboard.GetState().IsKeyDown(Keys.S))
-            { _position = Vector2.Add(_position, new Vector2(0, 5)); }
+            { Position -= Direction * Speed; }
 
             if (Keyboard.GetState().IsKeyDown(Keys.A))
-            { _position = Vector2.Add(_position, new Vector2(-5, 0)); }
-
+            { _rotation -= MathHelper.ToRadians(Rotationspeed); }
+            
             if (Keyboard.GetState().IsKeyDown(Keys.D))
-            { _position = Vector2.Add(_position, new Vector2(5, 0)); }
+            { _rotation += MathHelper.ToRadians(Rotationspeed); }
+
+            //Mathematik immer Mathematik überall Mathematik eyy
+            Direction = new Vector2((float)Math.Cos(_rotation), (float)Math.Sin(_rotation));
+
+            //Schiessen kreirt neue Projektile
+            if(_currentKey.IsKeyDown(Keys.Space) && _previousKey.IsKeyUp(Keys.Space))
+            {
+                Shoot(sprites);
+            }
         }
 
-        public void Draw(GameTime gameTime)
+        private void Shoot(List<Sprite> sprites)
         {
+            var projectile = Projectile.Clone() as Projectile;
+            projectile.Direction = this.Direction;
+            projectile.Position = this.Position;
+            projectile.Speed = 10f;
+            projectile.Speed = this.Speed * 2;
+            projectile.LifeSpan = 1.5f;
 
-            _spriteBatch.Begin();
-
-            _spriteBatch.Draw(_texture, _position, _skin);
-
-            _spriteBatch.End();
-             // TODO: Add your drawing code here
+            sprites.Add(projectile);
         }
+
     }
 }

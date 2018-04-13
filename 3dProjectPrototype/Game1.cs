@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System.Collections.Generic;
 
 namespace _3dProjectPrototype
 {
@@ -11,15 +12,17 @@ namespace _3dProjectPrototype
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
-        private Player player;
-        private Texture2D _playerTexture;
-        private bool won = true; //enables us to check if the skins are unlocked because the player won at least once
-        public int enemyCount;
-        private Enemy[] enemys = new Enemy[9];
+
+        //Liste für Alle Entitäten, erleichtert Update/Draw Aufrufe
+        private List<Sprite> _sprites;
+
+
         //maybe outsource later
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
+            //Vollbildfunktion
+            graphics.IsFullScreen = true;
             Content.RootDirectory = "Content";
         }
 
@@ -44,24 +47,31 @@ namespace _3dProjectPrototype
         /// </summary>
         protected override void LoadContent()
         {
-            // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
-            _playerTexture = Content.Load<Texture2D>("Images/Player");
-            player = new Player(_playerTexture, new Vector2(400, 400), spriteBatch);
 
+            //Spieler hat "vorne" grüne Markierung
+            var playerTexture = Content.Load<Texture2D>("Images/Player");
+            var enemyTexture = Content.Load<Texture2D>("Images/Enemy");
 
-            enemys[0] = new Enemy(_playerTexture, new Vector2(400, 0), spriteBatch);
-            enemys[1] = new Enemy(_playerTexture, new Vector2(300, -50), spriteBatch);
-            enemys[2] = new Enemy(_playerTexture, new Vector2(500, -50), spriteBatch);
-            enemys[3] = new Enemy(_playerTexture, new Vector2(200, -100), spriteBatch);
-            enemys[4] = new Enemy(_playerTexture, new Vector2(600, -100), spriteBatch);
-            enemys[5] = new Enemy(_playerTexture, new Vector2(100, -150), spriteBatch);
-            enemys[6] = new Enemy(_playerTexture, new Vector2(700, -150), spriteBatch);
-            enemys[7] = new Enemy(_playerTexture, new Vector2(0, -200), spriteBatch);
-            enemys[8] = new Enemy(_playerTexture, new Vector2(800, -200), spriteBatch);
-            //tried instancing enemys in a loop, but then only one enemy would get nstanced, TODO find efficent way
-
-            // TODO: use this.Content to load your game content here
+            _sprites = new List<Sprite>()
+            {
+                new Player(playerTexture)
+                {
+                    Position = new Vector2(100, 100),
+                    IsPlayer = true,
+                    Projectile = new Projectile(Content.Load<Texture2D>("Images/projectile")),
+                },
+                new Enemy(enemyTexture)
+                {
+                    Position = new Vector2(0,0),
+                    Speed = 1.5f
+                },
+                new Enemy(enemyTexture)
+                {
+                    Position = new Vector2(0,0),
+                    Speed = 1f
+                }
+            };
         }
 
         /// <summary>
@@ -83,36 +93,21 @@ namespace _3dProjectPrototype
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            player.Update(gameTime);
-            for (int i = 0; i < enemys.Length; i++) //update all enemys together
+            foreach(var sprite in _sprites.ToArray())
             {
-                enemys[i].Update(gameTime, player.getPosition());
+                sprite.Update(gameTime, _sprites);
             }
-
-            if (won) //skinselect
+            
+            //Projektile entfernen
+            for(int i = 0; i < _sprites.Count; i++)
             {
-                if (Keyboard.GetState().IsKeyDown(Keys.Up))
+                if(_sprites[i].IsRemoved)
                 {
-                    player.setSkin(Color.White);
-                }
-                if (Keyboard.GetState().IsKeyDown(Keys.Left))
-                {
-                    player.setSkin(Color.Green);
-                }
-                if (Keyboard.GetState().IsKeyDown(Keys.Right))
-                {
-                    player.setSkin(Color.Blue);
-                }
-                if (Keyboard.GetState().IsKeyDown(Keys.Down))
-                {
-                    player.setSkin(Color.Yellow);
+                    _sprites.RemoveAt(i);
+                    i--;
                 }
             }
-
-
-
-            // TODO: Add your update logic here
-
+            
             base.Update(gameTime);
         }
 
@@ -124,14 +119,12 @@ namespace _3dProjectPrototype
         {
             GraphicsDevice.Clear(Color.White);
 
-            player.Draw(gameTime);
+            spriteBatch.Begin();
 
-            for (int i = 0; i < enemys.Length; i++) //Draw all enemys together
-            {
-                enemys[i].Draw(gameTime);
-            }
+            foreach (var sprite in _sprites)
+                sprite.Draw(spriteBatch);
 
-            // TODO: Add your drawing code here
+            spriteBatch.End();
 
             base.Draw(gameTime);
         }
