@@ -12,14 +12,16 @@ namespace _3dProjectPrototype
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
-        
 
-        //Liste für Alle Entitäten, erleichtert Update/Draw Aufrufe
-        private List<Sprite> _sprites;
-        //test
-        private Model playermodel;
-        
 
+
+        private State _currentState;
+        private State _nextState;
+
+        public void ChangeState(State state)
+        {
+            _nextState = state;
+        }
 
         //maybe outsource later
         public Game1()
@@ -40,7 +42,7 @@ namespace _3dProjectPrototype
         /// </summary>
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
+            IsMouseVisible = true;
 
             base.Initialize();
         }
@@ -52,33 +54,9 @@ namespace _3dProjectPrototype
         protected override void LoadContent()
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
-            playermodel = Content.Load<Model>("Images/test");
 
-            //Spieler hat "vorne" grüne Markierung
-            var playerTexture = Content.Load<Texture2D>("Images/Player");
-            var enemyTexture = Content.Load<Texture2D>("Images/Enemy");
+            _currentState = new MenuState(this, graphics.GraphicsDevice, Content);
 
-            _sprites = new List<Sprite>()
-            {
-                new Player(playerTexture)
-                {
-                    Position = new Vector2(200, 200),
-                    IsPlayer = true,
-                    Projectile = new Projectile(Content.Load<Texture2D>("Images/projectile")),
-                },
-                new Enemy(enemyTexture)
-                {
-                    Position = new Vector2(100,100),
-                    IsEnemy = true,
-                    Speed = 1.5f
-                },
-                new Enemy(enemyTexture)
-                {
-                    Position = new Vector2(300,300),
-                    IsEnemy = true,
-                    Speed = 1f
-                }
-            };
         }
 
         /// <summary>
@@ -100,21 +78,17 @@ namespace _3dProjectPrototype
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            foreach(var sprite in _sprites.ToArray())
+            if (_nextState != null)
             {
-                sprite.Update(gameTime, _sprites);
+                _currentState = _nextState;
+
+                _nextState = null;
             }
-            
-            //Projektile entfernen
-            for(int i = 0; i < _sprites.Count; i++)
-            {
-                if(_sprites[i].IsRemoved)
-                {
-                    _sprites.RemoveAt(i);
-                    i--;
-                }
-            }
-            
+
+            _currentState.Update(gameTime);
+
+            _currentState.PostUpdate(gameTime);
+
             base.Update(gameTime);
         }
 
@@ -126,32 +100,10 @@ namespace _3dProjectPrototype
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            spriteBatch.Begin();
-
-            foreach (var sprite in _sprites)
-                sprite.Draw(spriteBatch);
-
-            spriteBatch.End();
-
-            //test
-            foreach (var sprite in _sprites)
-                DrawModel(playermodel, sprite.world, sprite.view, sprite.projection);
+            _currentState.Draw(gameTime, spriteBatch);
 
             base.Draw(gameTime);
         }
-        private void DrawModel(Model model, Matrix world, Matrix view, Matrix projection)
-        {
-            foreach (ModelMesh mesh in model.Meshes)
-            {
-                foreach (BasicEffect effect in mesh.Effects)
-                {
-                    effect.World = world;
-                    effect.View = view;
-                    effect.Projection = projection;
-                }
 
-                mesh.Draw();
-            }
-        }
     }
 }

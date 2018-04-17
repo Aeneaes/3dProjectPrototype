@@ -48,7 +48,6 @@ namespace _3dProjectPrototype
             if (Keyboard.GetState().IsKeyDown(Keys.Right))
             { _rotation += MathHelper.ToRadians(Rotationspeed); }
 
-            //Mathematik immer Mathematik überall Mathematik eyy
             Direction = new Vector2((float)Math.Cos(_rotation), (float)Math.Sin(_rotation));
 
             //übertragen der werte in 3d
