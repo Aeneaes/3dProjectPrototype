@@ -31,7 +31,6 @@ namespace _3dProjectPrototype
             Position += Direction * Speed;
             Hitbox.setPosition(Position);
 
-            
             //Enemys und Projektil entfernen wenn ein gegner getroffen wird
             foreach (var player in sprite)
             {

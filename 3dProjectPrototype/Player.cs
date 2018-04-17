@@ -51,12 +51,8 @@ namespace _3dProjectPrototype
             //Mathematik immer Mathematik überall Mathematik eyy
             Direction = new Vector2((float)Math.Cos(_rotation), (float)Math.Sin(_rotation));
 
-            //übertragen der werte in 3d
-            modelPosition = new Vector3(Position.X, Position.Y, 0);
-            world = Matrix.CreateTranslation(modelPosition);
-
             //Schiessen kreirt neue Projektile
-            if (_currentKey.IsKeyDown(Keys.Space) && _previousKey.IsKeyUp(Keys.Space))
+            if(_currentKey.IsKeyDown(Keys.Space) && _previousKey.IsKeyUp(Keys.Space))
             {
                 Shoot(sprites);
             }

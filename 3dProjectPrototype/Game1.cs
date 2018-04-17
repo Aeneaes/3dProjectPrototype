@@ -12,13 +12,9 @@ namespace _3dProjectPrototype
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
-        
 
         //Liste für Alle Entitäten, erleichtert Update/Draw Aufrufe
         private List<Sprite> _sprites;
-        //test
-        private Model playermodel;
-        
 
 
         //maybe outsource later
@@ -26,7 +22,7 @@ namespace _3dProjectPrototype
         {
             graphics = new GraphicsDeviceManager(this);
             //Vollbildfunktion
-            graphics.IsFullScreen = false;
+            graphics.IsFullScreen = true;
             Content.RootDirectory = "Content";
         }
 
@@ -52,7 +48,6 @@ namespace _3dProjectPrototype
         protected override void LoadContent()
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
-            playermodel = Content.Load<Model>("Images/test");
 
             //Spieler hat "vorne" grüne Markierung
             var playerTexture = Content.Load<Texture2D>("Images/Player");
@@ -133,25 +128,7 @@ namespace _3dProjectPrototype
 
             spriteBatch.End();
 
-            //test
-            foreach (var sprite in _sprites)
-                DrawModel(playermodel, sprite.world, sprite.view, sprite.projection);
-
             base.Draw(gameTime);
-        }
-        private void DrawModel(Model model, Matrix world, Matrix view, Matrix projection)
-        {
-            foreach (ModelMesh mesh in model.Meshes)
-            {
-                foreach (BasicEffect effect in mesh.Effects)
-                {
-                    effect.World = world;
-                    effect.View = view;
-                    effect.Projection = projection;
-                }
-
-                mesh.Draw();
-            }
         }
     }
 }
