@@ -22,6 +22,10 @@ namespace _3dProjectPrototype
             GetPlayerPos(sprite);
             Hitbox.setPosition(Position);
             //MoveTowardsPlayer(_playerPos); deactivated for testing
+
+            modelPosition = new Vector3(Position.X, Position.Y, 0);
+            world = Matrix.CreateTranslation(modelPosition);
+
             //kill player
             if (Hitbox.intersectsWith(_playerHit))
             {
