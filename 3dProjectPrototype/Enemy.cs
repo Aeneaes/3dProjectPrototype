@@ -32,7 +32,10 @@ namespace _3dProjectPrototype
                 foreach (var player in sprite)
                 {
                     if (player.IsPlayer)
+                    { 
                         player.IsRemoved = true;
+                        Game1.loose = true;
+                    }
                 }
             }
 

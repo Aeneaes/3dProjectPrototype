@@ -18,6 +18,12 @@ namespace _3dProjectPrototype
         private State _currentState;
         private State _nextState;
 
+        public static bool skinsUnlocked = false;
+        public static bool win = false;
+        public static bool loose = false;
+
+        public static int enemyCount;
+
         public void ChangeState(State state)
         {
             _nextState = state;
@@ -98,8 +104,19 @@ namespace _3dProjectPrototype
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
-
+            if (win)
+            {
+                GraphicsDevice.Clear(Color.ForestGreen);
+            }
+            else if(loose)
+            {
+                GraphicsDevice.Clear(Color.DarkRed);
+            }
+            else
+            {
+                GraphicsDevice.Clear(Color.CornflowerBlue);
+            }
+            
             _currentState.Draw(gameTime, spriteBatch);
 
             base.Draw(gameTime);

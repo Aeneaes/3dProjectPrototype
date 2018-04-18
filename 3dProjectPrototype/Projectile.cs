@@ -40,6 +40,7 @@ namespace _3dProjectPrototype
                     {
                         IsRemoved = true;
                         player.IsRemoved = true;
+                        
                     }
                     
             }

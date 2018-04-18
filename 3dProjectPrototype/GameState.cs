@@ -19,6 +19,7 @@ namespace _3dProjectPrototype
         public GameState(Game1 game, GraphicsDevice graphicsDevice, ContentManager content) : base(game, graphicsDevice, content)
         {
             playermodel = _content.Load<Model>("Images/test");
+            Game1.enemyCount = 3;
 
             //Spieler hat "vorne" grüne Markierung
             var playerTexture = _content.Load<Texture2D>("Images/Player");
@@ -37,7 +38,7 @@ namespace _3dProjectPrototype
                     Position = new Vector2(100,100),
                     IsEnemy = true,
                     Speed = 1.5f
-                },
+        },
                 new Enemy(enemyTexture)
                 {
                     Position = new Vector2(300,300),
@@ -49,6 +50,7 @@ namespace _3dProjectPrototype
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
+            
             spriteBatch.Begin();
 
             foreach (var sprite in _sprites)
@@ -97,6 +99,16 @@ namespace _3dProjectPrototype
                     i--;
                 }
             }
+            //Spieler gewinnt wenn er als letter steht ergo der einzige übrige sprite ist
+            if (_sprites.Count == 1)
+            {
+                Game1.win = true;
+                Game1.skinsUnlocked = true;
+            }
+
+
+            if(Game1.win || Game1.loose) _game.ChangeState(new MenuState(_game, _graphicsDevice, _content));
+
         }
     }
 }
