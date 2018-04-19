@@ -18,6 +18,8 @@ namespace _3dProjectPrototype
         private State _currentState;
         private State _nextState;
 
+        private Texture2D background;
+
         public static bool skinsUnlocked = false;
         public static bool win = false;
         public static bool loose = false;
@@ -59,6 +61,9 @@ namespace _3dProjectPrototype
         /// </summary>
         protected override void LoadContent()
         {
+
+            background = Content.Load<Texture2D>("Images/space");
+
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             _currentState = new MenuState(this, graphics.GraphicsDevice, Content);
@@ -104,6 +109,7 @@ namespace _3dProjectPrototype
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
+
             if (win)
             {
                 GraphicsDevice.Clear(Color.ForestGreen);
@@ -114,7 +120,9 @@ namespace _3dProjectPrototype
             }
             else
             {
-                GraphicsDevice.Clear(Color.White);
+                spriteBatch.Begin();
+                spriteBatch.Draw(background, new Rectangle(0, 0, 800, 480), Color.White);
+                spriteBatch.End();
             }
             
             _currentState.Draw(gameTime, spriteBatch);

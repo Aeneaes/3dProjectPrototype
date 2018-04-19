@@ -26,7 +26,8 @@ namespace _3dProjectPrototype
             //Key-release erkennen (Schussmechanik)
             _previousKey = _currentKey;
             _currentKey = Keyboard.GetState();
-        
+
+
             if (Keyboard.GetState().IsKeyDown(Keys.W))
             {
                 Position -= new Vector2(0, 1) * Speed;

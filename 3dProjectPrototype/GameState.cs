@@ -87,17 +87,6 @@ namespace _3dProjectPrototype
 
         public override void PostUpdate(GameTime gameTime)
         {
-
-        }
-
-        public override void Update(GameTime gameTime)
-        {
-            foreach (var sprite in _sprites.ToArray())
-            {
-                sprite.Update(gameTime, _sprites);
-            }
-
-            //Projektile entfernen
             for (int i = 0; i < _sprites.Count; i++)
             {
                 if (_sprites[i].IsRemoved)
@@ -106,7 +95,18 @@ namespace _3dProjectPrototype
                     i--;
                 }
             }
-            
+        }
+
+        public override void Update(GameTime gameTime)
+        {
+            foreach (var sprite in _sprites.ToArray())
+            {
+                sprite.Update(gameTime, _sprites);
+            }
+            //Projektile entfernen
+            PostUpdate(gameTime);
+ 
+
             world = Matrix.CreateRotationX(1.11f) * Matrix.CreateRotationZ(modelAngle) * Matrix.CreateTranslation(modelPosition);
             //Spieler gewinnt wenn er als letter steht ergo der einzige übrige sprite ist
             if (_sprites.Count == 1)
