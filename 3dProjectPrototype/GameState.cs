@@ -28,7 +28,7 @@ namespace _3dProjectPrototype
             modelPosition = new Vector3(0, 0, 0);
             modelAngle = -1.51f;
 
-            
+            //Spieler hat "vorne" grüne Markierung
             var playerTexture = _content.Load<Texture2D>("Images/Player");
             var enemyTexture = _content.Load<Texture2D>("Images/Enemy");
 
