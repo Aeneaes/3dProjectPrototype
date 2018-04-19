@@ -21,10 +21,8 @@ namespace _3dProjectPrototype
             GetPlayerHitbox(sprite);
             GetPlayerPos(sprite);
             Hitbox.setPosition(Position);
-            //MoveTowardsPlayer(_playerPos); deactivated for testing
+            //MoveTowardsPlayer(_playerPos); //deactivated for testing
 
-            modelPosition = new Vector3(Position.X, Position.Y, 0);
-            world = Matrix.CreateTranslation(modelPosition);
 
             //kill player
             if (Hitbox.intersectsWith(_playerHit))
@@ -32,9 +30,10 @@ namespace _3dProjectPrototype
                 foreach (var player in sprite)
                 {
                     if (player.IsPlayer)
-                    { 
-                        player.IsRemoved = true;
+                    {
                         Game1.loose = true;
+                        //player.IsRemoved = true;
+                        
                     }
                 }
             }

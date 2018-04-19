@@ -23,7 +23,7 @@ namespace _3dProjectPrototype
 
             var startButton = new Button(buttonTexture, buttonFont)
             {
-                Position = new Vector2(300, 200),
+                Position = new Vector2(350, 200),
                 Text = "Start",
             };
 
@@ -31,7 +31,7 @@ namespace _3dProjectPrototype
 
             var quitButton = new Button(buttonTexture, buttonFont)
             {
-                Position = new Vector2(300, 260),
+                Position = new Vector2(350, 260),
                 Text = "Quit",
             };
 
@@ -63,7 +63,7 @@ namespace _3dProjectPrototype
 
             if (Game1.win)
             {
-                spriteBatch.DrawString(textFont, "Nice! You Won some new Skins! (Choose via NumPad)", new Vector2(100, 100), Color.Black);
+                spriteBatch.DrawString(textFont, "Nice! You Won some new Backgrounds! (Choose via NumPad)", new Vector2(100, 100), Color.Black);
             }
             else if (Game1.loose)
             {

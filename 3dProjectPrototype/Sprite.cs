@@ -19,12 +19,7 @@ namespace _3dProjectPrototype
         protected KeyboardState _currentKey;
         protected KeyboardState _previousKey;
 
-        //test
-        public Matrix world = Matrix.CreateRotationX(1.11f) * Matrix.CreateTranslation(new Vector3(0, 0, 0));
-        public Matrix view = Matrix.CreateLookAt(new Vector3(0, 0, 10), new Vector3(0, 0, 0), Vector3.UnitY);
-        public Matrix projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(90), 800f / 480f, 0.1f, 100f);
-
-        public Vector3 modelPosition; //extra variable damit die logic nicht angepasst werden muss
+       
 
         public Vector2 Position;
         public Vector2 Origin;

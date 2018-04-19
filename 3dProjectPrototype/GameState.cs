@@ -14,12 +14,19 @@ namespace _3dProjectPrototype
         //Liste für Alle Entitäten, erleichtert Update/Draw Aufrufe
         private List<Sprite> _sprites;
         //test
-        private Model playermodel;
+        private Model playerModel;
+        public static Vector3 modelPosition;
+        public static float modelAngle;
+        private Matrix world = Matrix.CreateRotationX(1.11f) * Matrix.CreateTranslation(new Vector3(0, 0, 0));
+        private Matrix view = Matrix.CreateLookAt(new Vector3(0, 0, 50), new Vector3(0, 0, 0), Vector3.UnitY);
+        private Matrix projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(130), 800f / 480f, 0.1f, 100f);
 
         public GameState(Game1 game, GraphicsDevice graphicsDevice, ContentManager content) : base(game, graphicsDevice, content)
         {
-            playermodel = _content.Load<Model>("Images/test");
+            playerModel = _content.Load<Model>("Images/Ship2");
             Game1.enemyCount = 3;
+            modelPosition = new Vector3(0, 0, 0);
+            modelAngle = -1.51f;
 
             //Spieler hat "vorne" grüne Markierung
             var playerTexture = _content.Load<Texture2D>("Images/Player");
@@ -29,7 +36,7 @@ namespace _3dProjectPrototype
             {
                 new Player(playerTexture)
                 {
-                    Position = new Vector2(200, 200),
+                    Position = new Vector2(400, 240),
                     IsPlayer = true,
                     Projectile = new Projectile(_content.Load<Texture2D>("Images/projectile")),
                 },
@@ -50,18 +57,18 @@ namespace _3dProjectPrototype
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            
+
             spriteBatch.Begin();
 
             foreach (var sprite in _sprites)
-                sprite.Draw(spriteBatch);
-
+            {
+                if (!sprite.IsPlayer) sprite.Draw(spriteBatch);
+                DrawModel(playerModel, world, view, projection);
+            }
             spriteBatch.End();
-
-            //test
-            foreach (var sprite in _sprites)
-                DrawModel(playermodel, sprite.world, sprite.view, sprite.projection);
         }
+
+            
 
         private void DrawModel(Model model, Matrix world, Matrix view, Matrix projection)
         {
@@ -99,6 +106,8 @@ namespace _3dProjectPrototype
                     i--;
                 }
             }
+            
+            world = Matrix.CreateRotationX(1.11f) * Matrix.CreateRotationZ(modelAngle) * Matrix.CreateTranslation(modelPosition);
             //Spieler gewinnt wenn er als letter steht ergo der einzige übrige sprite ist
             if (_sprites.Count == 1)
             {
@@ -110,5 +119,6 @@ namespace _3dProjectPrototype
             if(Game1.win || Game1.loose) _game.ChangeState(new MenuState(_game, _graphicsDevice, _content));
 
         }
+        
     }
 }

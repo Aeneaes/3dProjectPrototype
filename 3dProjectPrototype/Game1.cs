@@ -114,7 +114,7 @@ namespace _3dProjectPrototype
             }
             else
             {
-                GraphicsDevice.Clear(Color.CornflowerBlue);
+                GraphicsDevice.Clear(Color.White);
             }
             
             _currentState.Draw(gameTime, spriteBatch);

@@ -28,31 +28,48 @@ namespace _3dProjectPrototype
             _currentKey = Keyboard.GetState();
         
             if (Keyboard.GetState().IsKeyDown(Keys.W))
-            { Position -= new Vector2(0, 1) * Speed; }
+            {
+                Position -= new Vector2(0, 1) * Speed;
+                GameState.modelPosition += new Vector3(0, 0.01f, 0) * Speed * 43;
+            }
 
             if (Keyboard.GetState().IsKeyDown(Keys.S))
-            { Position += new Vector2(0, 1) * Speed; }
+            {
+                Position += new Vector2(0, 1) * Speed;
+                GameState.modelPosition -= new Vector3(0, 0.01f, 0) * Speed * 43;
+            }
 
             if (Keyboard.GetState().IsKeyDown(Keys.A))
-            { Position -= new Vector2(1, 0) * Speed; }
+            {
+                Position -= new Vector2(1, 0) * Speed;
+                GameState.modelPosition -= new Vector3(0.01f, 0, 0) * Speed * 43;
+            }
 
             if (Keyboard.GetState().IsKeyDown(Keys.D))
-            { Position += new Vector2(1, 0) * Speed; }
+            {
+                Position += new Vector2(1, 0) * Speed;
+                GameState.modelPosition += new Vector3(0.01f, 0, 0) * Speed * 43;
+            }
 
             Hitbox.setPosition(Position);
+             
 
 
             if (Keyboard.GetState().IsKeyDown(Keys.Left))
-            { _rotation -= MathHelper.ToRadians(Rotationspeed); }
+            {
+                _rotation -= MathHelper.ToRadians(Rotationspeed);
+                GameState.modelAngle += Rotationspeed/57.5f;
+            }
             
             if (Keyboard.GetState().IsKeyDown(Keys.Right))
-            { _rotation += MathHelper.ToRadians(Rotationspeed); }
+            {
+                _rotation += MathHelper.ToRadians(Rotationspeed);
+                GameState.modelAngle -= Rotationspeed/57.5f;
+            }
 
             Direction = new Vector2((float)Math.Cos(_rotation), (float)Math.Sin(_rotation));
 
-            //übertragen der werte in 3d
-            modelPosition = new Vector3(Position.X, Position.Y, 0);
-            world = Matrix.CreateTranslation(modelPosition);
+            
 
             //Schiessen kreirt neue Projektile
             if (_currentKey.IsKeyDown(Keys.Space) && _previousKey.IsKeyUp(Keys.Space))
