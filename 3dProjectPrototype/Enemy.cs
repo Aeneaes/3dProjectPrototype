@@ -21,7 +21,7 @@ namespace _3dProjectPrototype
             GetPlayerHitbox(sprite);
             GetPlayerPos(sprite);
             Hitbox.setPosition(Position);
-            //MoveTowardsPlayer(_playerPos); //deactivated for testing
+            MoveTowardsPlayer(_playerPos); //deactivated for testing
 
 
             //kill player

@@ -18,7 +18,9 @@ namespace _3dProjectPrototype
         private State _currentState;
         private State _nextState;
 
-        private Texture2D background;
+        private Texture2D activeBackground;
+        private Texture2D standartBackground;
+        private Texture2D alternativeBackground;
 
         public static bool skinsUnlocked = false;
         public static bool win = false;
@@ -62,8 +64,9 @@ namespace _3dProjectPrototype
         protected override void LoadContent()
         {
 
-            background = Content.Load<Texture2D>("Images/space");
-
+            standartBackground = Content.Load<Texture2D>("Images/space");
+            alternativeBackground = Content.Load<Texture2D>("Images/earth");
+            activeBackground = standartBackground;
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             _currentState = new MenuState(this, graphics.GraphicsDevice, Content);
@@ -96,6 +99,12 @@ namespace _3dProjectPrototype
                 _nextState = null;
             }
 
+            if (skinsUnlocked)
+            {
+                if (Keyboard.GetState().IsKeyDown(Keys.NumPad1)) activeBackground = standartBackground;
+                if (Keyboard.GetState().IsKeyDown(Keys.NumPad2)) activeBackground = alternativeBackground;
+            }
+
             _currentState.Update(gameTime);
 
             _currentState.PostUpdate(gameTime);
@@ -121,7 +130,7 @@ namespace _3dProjectPrototype
             else
             {
                 spriteBatch.Begin();
-                spriteBatch.Draw(background, new Rectangle(0, 0, 800, 480), Color.White);
+                spriteBatch.Draw(activeBackground, new Rectangle(0, 0, 800, 480), Color.White);
                 spriteBatch.End();
             }
             

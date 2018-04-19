@@ -42,13 +42,37 @@ namespace _3dProjectPrototype
                 },
                 new Enemy(enemyTexture)
                 {
-                    Position = new Vector2(100,100),
+                    Position = new Vector2(700,240),
                     IsEnemy = true,
                     Speed = 1.5f
-        },
+                },
                 new Enemy(enemyTexture)
                 {
-                    Position = new Vector2(300,300),
+                    Position = new Vector2(0,240),
+                    IsEnemy = true,
+                    Speed = 1f
+                },
+                new Enemy(enemyTexture)
+                {
+                    Position = new Vector2(0,-50),
+                    IsEnemy = true,
+                    Speed = 1.5f
+                },
+                new Enemy(enemyTexture)
+                {
+                    Position = new Vector2(700,600),
+                    IsEnemy = true,
+                    Speed = 1f
+                },
+                new Enemy(enemyTexture)
+                {
+                    Position = new Vector2(-50,800),
+                    IsEnemy = true,
+                    Speed = 1.5f
+                },
+                new Enemy(enemyTexture)
+                {
+                    Position = new Vector2(400,-400),
                     IsEnemy = true,
                     Speed = 1f
                 }
